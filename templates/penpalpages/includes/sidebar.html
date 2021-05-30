@@ -1,0 +1,37 @@
+<div class="col-lg-3 col-md-3 col-sm-6 mx-auto">
+    <div class="card">
+        <div class="card-body">
+            <div class="d-flex flex-column align-items-center text-center">
+                {% if profile.photo %}
+                <img src="{{profile.photo.url}}" alt="Profile Photo" class="rounded-circle" width="150">
+                {% else %}
+                <img src="https://i0.wp.com/www.reliableroofingphilly.com/wp-content/uploads/2015/04/male-placeholder-image.png?ssl=1"
+                     alt="Profile Photo" class="rounded-circle" width="150">
+                {% endif %}
+                <div class="mt-3 text-white-60">
+                    <a href="{{profile.get_absolute_url}}">
+                        <h4>{{profile}}</h4>
+                    </a>
+                    <!--notice here that profile.user and profile tags are conveying the same content-->
+                    <p class="text-secondary mb-0">Welcome, {{profile.user}}</p>
+                    <hr>
+
+                    <h6>Social Network for Conversational Language Learning</h6>
+                    <hr>
+                    {% if request.user == profile.user %}
+                    <a href="{% url 'penpalpages:logout' %}">
+                        <button class="btn btn-danger btn-rounded">Logout</button>
+                    </a>
+                    {% elif request.user.is_anonymous %}
+                    <a href="{% url 'penpalpages:register' %}">
+                        <button class="btn btn-success btn-rounded">Register</button>
+                    </a>
+                    <a href="{% url 'penpalpages:login' %}">
+                        <button class="btn btn-warning btn-rounded">Login</button>
+                    </a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

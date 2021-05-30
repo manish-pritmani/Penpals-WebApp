@@ -1,0 +1,108 @@
+{% extends 'penpalpages/base.html' %}
+{% block content %}
+<div class="row">
+    {% include 'penpalpages/includes/sidebar.html' %}
+    <div class="col-md-9 col-sm-12">
+        {% if request.user.profile.id == profile.id %}
+        <div class="float-right">
+            <a class="btn btn-info" href="{% url 'penpalpages:edit' %}">Edit Profile</a>
+        </div>
+
+        {% elif request.user.is_authenticated %}
+            {% if btn_text == 'not_friend' %}
+                <div class="float-right">
+                    <a class="btn btn-primary" href="{% url 'penpalpages:send_request' profile.id %}">Add Friend</a>
+                </div>
+            {% elif btn_text == 'request_sent' %}
+            <div class="float-right">
+                <a class="btn btn-danger" href="{% url 'penpalpages:cancel_request' profile.id %}">Cancel Request</a>
+            </div>
+            {% endif %}
+        {% endif %}
+
+        <h3>{{ profile.user }}</h3>
+        <div class="my-4">
+            <h6>{{profile.first}} {{profile.last}}</h6>
+            <h6>Speaks : {{profile.speaks}}</h6>
+            <h6>Currently Learning : {{profile.is_learning}}</h6>
+        </div>
+
+        {% if friends %}
+        <div class="table-responsive">
+            <table class="table table-striped">
+                <caption>List of Penpals</caption>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>E-mail</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for f in friends %}
+                        <tr>
+                            <td>
+                                {{f}}
+                            </td>
+                            <td>
+                                {{f.user.email}}
+                            </td>
+                            {% if request.user.profile.id == profile.id %}
+                            <td><a class="btn btn-danger confirm-delete" id={{f}} data-toggle="modal" data-target="#confirmModal" href="{% url 'penpalpages:unfriend' f.id %}">Unfriend</a></td>
+                            {% endif %}
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+
+        {% if request.user.profile.id == profile.id and received_requests %}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>Received Friend Requests</caption>
+                <tbody>
+                {% for r_request in received_requests %}
+                    <tr>
+                        <td>{{r_request}}</td>
+                        <td><a class="btn btn-primary" href="{% url 'penpalpages:accept_request' r_request.from_profile.id %}">Accept</a></td>
+                        <td><a class="btn btn-danger" href="{% url 'penpalpages:delete_request' r_request.from_profile.id %}">Delete</a></td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% endif %}
+    </div>
+</div>
+<!-- confirm modal matches with the data target we have with the button -->
+<div class="modal fade" id="confirmModal" tabIndex="-1" caller-id role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal" id="confirmButtonModal">Unfriend</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+{% endblock content%}
+{% block js %}
+<script type="text/javascript">
+
+    $(document).on('click','.confirm-delete', function(){
+        $("#confirmModal").attr("caller-id",$(this).attr("id"));
+        $("div.modal-body").text("Are you sure you want to unfriend "+ $(this).attr("id")+"?");
+    });
+
+    $(document).on('click','#confirmButtonModal', function(){
+        var caller = $("#confirmButtonModal").closest(".modal").attr("caller-id");
+        window.location = $("#".concat(caller)).attr("href");
+    });
+
+</script>
+{% endblock js%}
