@@ -19,6 +19,10 @@
                     <h6>Social Network for Conversational Language Learning</h6>
                     <hr>
                     {% if request.user == profile.user %}
+                    <a href="{% url 'conversations:inbox' %} ">
+                    <button class="btn btn-danger btn-rounded">Inbox</button>
+                    </a>
+                    |
                     <a href="{% url 'penpalpages:logout' %}">
                         <button class="btn btn-danger btn-rounded">Logout</button>
                     </a>

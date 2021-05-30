@@ -23,7 +23,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include("penpalpages.urls"))
+    path('', include("penpalpages.urls")),
+    path('message/',include('conversations.urls')),
 ]
 
 if settings.DEBUG:

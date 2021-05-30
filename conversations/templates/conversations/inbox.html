@@ -1,0 +1,40 @@
+{% extends 'penpalpages/base.html' %}
+
+{% block content %}
+
+<div class="row">
+    {% include 'penpalpages/includes/sidebar.html' %}
+
+    <div class="col-md-9 col-sm-12">
+
+        {% if friends %}
+        <div class="table-responsive">
+            <table class="table">
+                <caption>Start a new chat with : </caption>
+                <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for f in friends  %}
+                <tr>
+                    <td>{{f}}</td>
+                    <td>{{f.user.email}}</td>
+                    {% if request.user.profile.id == profile.id %}
+                    <td><a href="" class="btn btn-outline-info">Start Chatting</a></td>
+                    {% endif %}
+
+                </tr>
+
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        {% endif %}
+    </div>
+</div>
+
+{% endblock content %}
